@@ -37,9 +37,9 @@ $Environments = CallDeploymentAPI -Method GET -Endpoint environments
 #$Environments | Format-Table Name,Key > LT.Environments.mapping
 
 $envtab = $Environments | Format-Table Name,Key
-echo "Debug:" $envtab
+echo $envtab > ./LT.Environments.mapping
 
-$envtab | Export-Csv -Path "LT.Environments.mapping"
+#$envtab | Export-Csv -Path "LT.Environments.mapping"
 
 cat ./LT.Environments.mapping 
 
