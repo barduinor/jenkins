@@ -16,13 +16,13 @@
 <###################################################################################>
 function CallDeploymentAPI ($Method, $Endpoint, $Body)
 {
-	#$Url = "https://$env:LifeTimeUrl/LifeTimeAPI/rest/v1/$Endpoint"
-	$Url = "https://catalyst-lt.outsystemsenterprise.com/LifeTimeAPI/rest/v1/$Endpoint"
+	$Url = "https://$env:LifeTimeUrl/LifeTimeAPI/rest/v1/$Endpoint"
+	#$Url = "https://catalyst-lt.outsystemsenterprise.com/LifeTimeAPI/rest/v1/$Endpoint"
 
     $ContentType = "application/json"
 	$Headers = @{
-		#Authorization = "Bearer $env:AuthorizationToken"
-        Authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJsaWZldGltZSIsInN1YiI6IllqUmtZbU00WkRjdE9EWTVaQzAwTWpWaUxUbGhaRGd0WldZM05HVmlOV1ZsWVRRMSIsImF1ZCI6ImxpZmV0aW1lIiwiaWF0IjoiMTUzNDM2NDUzNyIsImppdCI6Ik0xT20xVXBqbloifQ==.ZU0vGrIQtiaMOXYFDSR/+Lp6Fd14aZKFvHW1mLsNEhI="
+		Authorization = "Bearer $env:AuthorizationToken"
+        #Authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJsaWZldGltZSIsInN1YiI6IllqUmtZbU00WkRjdE9EWTVaQzAwTWpWaUxUbGhaRGd0WldZM05HVmlOV1ZsWVRRMSIsImF1ZCI6ImxpZmV0aW1lIiwiaWF0IjoiMTUzNDM2NDUzNyIsImppdCI6Ik0xT20xVXBqbloifQ==.ZU0vGrIQtiaMOXYFDSR/+Lp6Fd14aZKFvHW1mLsNEhI="
 		Accept = "application/json"
 	}
 		
@@ -32,12 +32,15 @@ function CallDeploymentAPI ($Method, $Endpoint, $Body)
 
 # Fetch latest OS Environments data 
 $Environments = CallDeploymentAPI -Method GET -Endpoint environments 
-$Environments | Format-Table Name,Key > LT.Environments.mapping
+#$Environments | Format-Table Name,Key > LT.Environments.mapping
+$Environments | export-csv LT.Environments.mapping
+
 "Environments=" + ( ( $Environments | %{ $_.Name } | Sort-Object ) -join "," ) | Out-File LT.Environments.properties -Encoding Default
 echo "OS Environments data retrieved successfully."
 
 # Fetch latest OS Applications data
 $Applications = CallDeploymentAPI -Method GET -Endpoint applications 
-$Applications | Format-Table Name,Key > LT.Applications.mapping
+#$Applications | Format-Table Name,Key > LT.Applications.mapping
+$Applications | export-csv LT.Applications.mapping
 "Applications=" + ( ( $Applications | %{ $_.Name } | Sort-Object ) -join "," ) | Out-File LT.Applications.properties -Encoding Default
 echo "OS Applications data retrieved successfully."
