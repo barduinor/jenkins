@@ -49,6 +49,6 @@ echo "OS Environments data retrieved successfully."
 # Fetch latest OS Applications data
 $Applications = CallDeploymentAPI -Method GET -Endpoint applications 
 #$Applications | Format-Table Name,Key > LT.Applications.mapping
-$Applications | export-csv LT.Applications.mapping
+$Applications  | Format-Table Name,Key | export-csv LT.Applications.mapping
 "Applications=" + ( ( $Applications | %{ $_.Name } | Sort-Object ) -join "," ) | Out-File LT.Applications.properties -Encoding Default
 echo "OS Applications data retrieved successfully."
