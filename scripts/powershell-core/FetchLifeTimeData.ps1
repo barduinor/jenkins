@@ -16,39 +16,69 @@
 <###################################################################################>
 function CallDeploymentAPI ($Method, $Endpoint, $Body)
 {
-	$Url = "https://$env:LifeTimeUrl/LifeTimeAPI/rest/v1/$Endpoint"
-	#$Url = "https://catalyst-lt.outsystemsenterprise.com/LifeTimeAPI/rest/v1/$Endpoint"
+        $Url = "https://$env:LifeTimeUrl/LifeTimeAPI/rest/v1/$Endpoint"
+        #$Url = "https://catalyst-lt.outsystemsenterprise.com/LifeTimeAPI/rest/v1/$Endpoint"
 
     $ContentType = "application/json"
-	$Headers = @{
-		Authorization = "Bearer $env:AuthorizationToken"
+        $Headers = @{
+                Authorization = "Bearer $env:AuthorizationToken"
         #Authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJsaWZldGltZSIsInN1YiI6IllqUmtZbU00WkRjdE9EWTVaQzAwTWpWaUxUbGhaRGd0WldZM05HVmlOV1ZsWVRRMSIsImF1ZCI6ImxpZmV0aW1lIiwiaWF0IjoiMTUzNDM2NDUzNyIsImppdCI6Ik0xT20xVXBqbloifQ==.ZU0vGrIQtiaMOXYFDSR/+Lp6Fd14aZKFvHW1mLsNEhI="
-		Accept = "application/json"
-	}
-		
-	try { Invoke-RestMethod -Method $Method -Uri $Url -Headers $Headers -ContentType $ContentType -Body $body }
-	catch { Write-Host $_; exit 9 }
+                Accept = "application/json"
+        }
+
+        try { Invoke-RestMethod -Method $Method -Uri $Url -Headers $Headers -ContentType $ContentType -Body $body }
+        catch { Write-Host $_; exit 9 }
 }
 
-# Fetch latest OS Environments data 
-$Environments = CallDeploymentAPI -Method GET -Endpoint environments 
+# Fetch latest OS Environments data
+$Environments = CallDeploymentAPI -Method GET -Endpoint environments
+#echo "Debug: json"
+#$Environments
 
 # Process output
-#$Environments | Format-Table Name,Key > LT.Environments.mapping
+$envtab = $Environments | Select-Object -Property Name,Key
+#echo "Environment Table"
+#echo $envtab
 
-$envtab = $Environments | Format-Table Name,Key
-echo $envtab 
+$envtab | export-csv LT.Environments.mapping
+#echo "Done Conversion"
 
-#$envtab | Export-Csv -Path "LT.Environments.mapping"
-
-cat ./LT.Environments.mapping 
+echo "Debug - LT.Environments.mapping File content"
+cat ./LT.Environments.mapping
 
 "Environments=" + ( ( $Environments | %{ $_.Name } | Sort-Object ) -join "," ) | Out-File LT.Environments.properties -Encoding Default
 echo "OS Environments data retrieved successfully."
+echo "Debug - LT.Environments.properties File content"
+cat ./LT.Environments.properties
+
+echo "------------------"
+echo "Done Environments"
+echo "------------------"
+
 
 # Fetch latest OS Applications data
-$Applications = CallDeploymentAPI -Method GET -Endpoint applications 
+$Applications = CallDeploymentAPI -Method GET -Endpoint applications
 #$Applications | Format-Table Name,Key > LT.Applications.mapping
-$Applications  | Format-Table Name,Key | export-csv LT.Applications.mapping
+
+#echo "Debug: json"
+#$Applications
+
+# Process output
+$appstab = $Applications  | Select-Object -Property Name,Key
+#echo "Debug - Applications Table"
+#echo $appstab
+
+$appstab | export-csv LT.Applications.mapping
+echo "Debug - LT.Applications.mapping File content"
+cat ./LT.Applications.mapping
+
 "Applications=" + ( ( $Applications | %{ $_.Name } | Sort-Object ) -join "," ) | Out-File LT.Applications.properties -Encoding Default
+
+echo "Debug - LT.Applications.properties File content"
+cat ./LT.Applications.properties
+
+echo "------------------"
+echo "Done Applications "
+echo "------------------"
+
 echo "OS Applications data retrieved successfully."
