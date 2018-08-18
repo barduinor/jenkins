@@ -34,7 +34,7 @@ function CallDeploymentAPI ($Method, $Endpoint, $Body)
 $Environments = CallDeploymentAPI -Method GET -Endpoint environments 
 #$Environments | Format-Table Name,Key > LT.Environments.mapping
 echo "DEbug:" $Environments
-$Environments | Format-Table Name,Key | export-csv ./LT.Environments.mapping 
+$Environments | Format-Table Name,Key | Export-Csv -Path LT.Environments.mapping 
 
 "Environments=" + ( ( $Environments | %{ $_.Name } | Sort-Object ) -join "," ) | Out-File LT.Environments.properties -Encoding Default
 echo "OS Environments data retrieved successfully."
