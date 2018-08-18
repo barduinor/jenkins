@@ -32,9 +32,16 @@ function CallDeploymentAPI ($Method, $Endpoint, $Body)
 
 # Fetch latest OS Environments data 
 $Environments = CallDeploymentAPI -Method GET -Endpoint environments 
+
+# Process output
 #$Environments | Format-Table Name,Key > LT.Environments.mapping
-echo "DEbug:" $Environments
-$Environments | Format-Table Name,Key | Export-Csv -Path LT.Environments.mapping 
+
+$envtab = $Environments | Format-Table Name,Key
+echo "DEbug:" $enctab
+
+$envtab | export-csv -Path LT.Environments.mapping 
+
+cat ./LT.Environments.mapping 
 
 "Environments=" + ( ( $Environments | %{ $_.Name } | Sort-Object ) -join "," ) | Out-File LT.Environments.properties -Encoding Default
 echo "OS Environments data retrieved successfully."
