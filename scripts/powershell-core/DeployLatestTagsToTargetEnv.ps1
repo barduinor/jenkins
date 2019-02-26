@@ -86,6 +86,11 @@ $RequestBody = @"
 $DeploymentPlanKey = CallDeploymentAPI -Method POST -Endpoint "deployments" -Body $RequestBody
 echo "Deployment plan '$DeploymentPlanKey' created successfully."
 
+# Deployment Details
+echo "Deployment detail for plan '$DeploymentPlanKey' "
+$DeploymentDetails = CallDeploymentAPI -Method GET -Endpoint "deployments/$DeploymentPlanKey"
+echo '@DeploymentDetails'
+
 # Start Deployment Plan execution
 $DeploymentPlanStart = CallDeploymentAPI -Method POST -Endpoint "deployments/$DeploymentPlanKey/start"
 echo "Deployment plan '$DeploymentPlanKey' started being executed."
