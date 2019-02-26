@@ -86,6 +86,7 @@ $RequestBody = @"
 $DeploymentPlanKey = CallDeploymentAPI -Method POST -Endpoint "deployments" -Body $RequestBody
 echo "Deployment plan '$DeploymentPlanKey' created successfully."
 
+# commit
 # Deployment Details
 echo "Deployment detail for plan '$DeploymentPlanKey' "
 $DeploymentDetails = CallDeploymentAPI -Method GET -Endpoint "deployments/$DeploymentPlanKey"
