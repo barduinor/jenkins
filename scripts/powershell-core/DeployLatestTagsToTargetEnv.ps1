@@ -21,10 +21,9 @@ function CallDeploymentAPI ($Method, $Endpoint, $Body)
 
     $ContentType = "application/json"
         $Headers = @{
-                #Authorization = "Bearer $env:AuthorizationToken"
-        Authorization = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJsaWZldGltZSIsInN1YiI6IllqUmtZbU00WkRjdE9EWTVaQzAwTWpWaUxUbGhaRGd0WldZM05HVmlOV1ZsWVRRMSIsImF1ZCI6ImxpZmV0aW1lIiwiaWF0IjoiMTUzNDM2NDUzNyIsImppdCI6Ik0xT20xVXBqbloifQ==.ZU0vGrIQtiaMOXYFDSR/+Lp6Fd14aZKFvHW1mLsNEhI="
-                Accept = "application/json"
-        }
+		Authorization = "Bearer $env:AuthorizationToken"
+		Accept = "application/json"
+	}
 
         try { Invoke-RestMethod -Method $Method -Uri $Url -Headers $Headers -ContentType $ContentType -Body $body }
         catch { Write-Host $_; exit 9 }
